@@ -1,33 +1,16 @@
 import pandas as pd
 import numpy as np
-import matplotlib.pyplot as plt
 import seaborn as sns
+import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
 from sklearn import metrics
 from sklearn.preprocessing import StandardScaler
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import confusion_matrix, accuracy_score, r2_score, mean_squared_error, mean_absolute_error
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.metrics import accuracy_score
+from evaluation import evaluate_metrics
 
 df = pd.read_csv(filepath_or_buffer='bike-sharing-dataset/hour.csv')
-
-# print(df.head(10))
-# print(df.shape)
-# print(df.info())
-# print(df.isnull().sum())
-# sns.heatmap(df.isnull(), annot=True, cmap="viridis")
-# plt.show()
-
-# sns.set(style='whitegrid')
-# sns.scatterplot(data=df)
-# plt.show()
-
-# corrMatrix = df.corr()
-# sns.heatmap(corrMatrix , annot=True, cmap="viridis")
-# plt.show()
-
-# sns.pairplot(df)
-# plt.show()
 
 to_drop = ['instant', 'dteday', 'casual', 'registered']
 df.drop(to_drop, inplace=True, axis=1)
@@ -45,17 +28,6 @@ X_train_scaled = scaler.fit_transform(X_train)
 X_test_scaled = scaler.transform(X_test)
 
 # print(X_train.shape, X_test.shape, Y_train.shape, Y_test.shape)
-
-# Error prediction function
-
-
-def evaluate_metrics(actual, pred):
-    rmse = np.sqrt(mean_squared_error(actual, pred))
-    mae = mean_absolute_error(actual, pred)
-    mse = mean_squared_error(actual, pred)
-    r2score = r2_score(actual, pred)
-    return print("RMSE:", rmse, "\n", "MAE:", mae, "\n", "MSE:", mse, "\n", "R2_SCORE: ", r2score)
-
 
 # Linear regression model
 lin_reg_model = LinearRegression()
@@ -82,16 +54,12 @@ evaluate_metrics(Y_test, Y_pred)
 # sns.distplot(df['cnt'], norm_hist=False, kde=False, bins=20, hist_kws={"alpha": 1})
 # plt.show()
 
-
 # Random forest regression
-
-rf_classifier = RandomForestClassifier(n_estimators=50, random_state=0, criterion='entropy')
+rf_classifier = RandomForestRegressor(n_estimators=50, random_state=0, criterion='squared_error')
 rf_classifier.fit(X_train_scaled, Y_train)
 y_pred = rf_classifier.predict(X_test_scaled)
 
 evaluate_metrics(Y_test, y_pred)
-accuracy = accuracy_score(Y_test, y_pred)
-print(f"The accuracy score is {accuracy}")
 
 # Check feature importance to improve the model
 # feature_importances_df = pd.DataFrame(
