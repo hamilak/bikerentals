@@ -10,7 +10,7 @@ from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import accuracy_score
 from evaluation import evaluate_metrics
 
-df = pd.read_csv(filepath_or_buffer='bike-sharing-dataset/hour.csv')
+df = pd.read_csv('bike-sharing-dataset/hour.csv')
 
 to_drop = ['instant', 'dteday', 'casual', 'registered']
 df.drop(to_drop, inplace=True, axis=1)
